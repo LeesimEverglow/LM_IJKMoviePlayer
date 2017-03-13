@@ -17,3 +17,4 @@
 
 [点击这里你可以下载已经打好framework的ijk](http://pan.baidu.com/s/1i4Q2gG9)<br /> 
 
+[具体原理和使用细节请点击这里](http://www.jianshu.com/p/3c109b2c5ba9)<br /> 

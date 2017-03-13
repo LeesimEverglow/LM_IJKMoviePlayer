@@ -174,15 +174,15 @@
 			isa = PBXGroup;
 			children = (
 				0B1DA4001E714674002D5642 /* coverimg.jpeg */,
+				0B1DA4081E714674002D5642 /* OWTaskTopAlphaImage.h */,
+				0B1DA4091E714674002D5642 /* OWTaskTopAlphaImage.m */,
+				0B1DA4031E714674002D5642 /* LRMacroDefinitionHeader.h */,
 				0B1DA4011E714674002D5642 /* LMVideoPlayerView.h */,
 				0B1DA4021E714674002D5642 /* LMVideoPlayerView.m */,
-				0B1DA4031E714674002D5642 /* LRMacroDefinitionHeader.h */,
 				0B1DA4041E714674002D5642 /* LZHButton.h */,
 				0B1DA4051E714674002D5642 /* LZHButton.m */,
 				0B1DA4061E714674002D5642 /* LZHProgressSlider.h */,
 				0B1DA4071E714674002D5642 /* LZHProgressSlider.m */,
-				0B1DA4081E714674002D5642 /* OWTaskTopAlphaImage.h */,
-				0B1DA4091E714674002D5642 /* OWTaskTopAlphaImage.m */,
 				0B1DA40A1E714674002D5642 /* XYVideoModel.h */,
 				0B1DA40B1E714674002D5642 /* XYVideoModel.m */,
 			);
