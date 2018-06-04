@@ -496,7 +496,9 @@ typedef NS_ENUM(NSUInteger, Direction) {
         //如果正在播放才去改变当前播放时间 防止播放时间突然变动
         self.currTimeLabel.text = [self stringWithTime:current];
         self.totalTimeLabel.text = [self stringWithTime:total];
-        
+        if([self.totalTimeLabel.text isEqualToString:@"00:00:00"]){
+            self.totalTimeLabel.text = @"--:--:--";
+        }
     }
     self.lastTime = current;
     //缓冲进度
@@ -508,6 +510,8 @@ typedef NS_ENUM(NSUInteger, Direction) {
             self.slider.progressPercent = loadedTime/total;
         }
     }
+    
+    
     if (current >= total && ![self.totalTimeLabel.text isEqualToString:@"00:00:00"] && total != 0) {
     
         //播放结束 重置状态
@@ -813,6 +817,7 @@ typedef NS_ENUM(NSUInteger, Direction) {
     NSInteger s = (NSInteger)time % 60;
     
     NSString *stringtime = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", h, m, (long)s];
+   
     
     return stringtime;
 }
