@@ -13,8 +13,6 @@
 /** 视频播放视图 */
 @property (nonatomic, strong) LMIJKVideoPlayerView *playerView;
 
-//封面图
-@property (nonatomic,strong) UIImage * coverImage;
 @end
 
 @implementation ViewController
@@ -22,7 +20,7 @@
 #pragma mark - life cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.view.backgroundColor = [UIColor blackColor];
     [self.view addSubview:self.playerView];
     
     //测试地址
@@ -32,7 +30,6 @@
     
     self.playerView.videoUrl = @"http://qimage.owhat.cn/test/master/media/1510731201386.mp4";
  
-    
 }
 
 

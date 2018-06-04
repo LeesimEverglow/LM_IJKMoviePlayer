@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B25B74620C4EDC200B9524D /* IJKMediaFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B25B74520C4EDC200B9524D /* IJKMediaFramework.framework */; };
 		0B41FD9320BFFD46009F462E /* LMIJKVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B41FD9120BFFD46009F462E /* LMIJKVideoPlayerView.m */; };
 		0B41FD9620C12AC5009F462E /* LMIJKVideoPlayerVolumeBrightButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B41FD9520C12AC5009F462E /* LMIJKVideoPlayerVolumeBrightButton.m */; };
 		0B41FD9920C12B2A009F462E /* LMIJKVideoPlayerProgressSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B41FD9820C12B2A009F462E /* LMIJKVideoPlayerProgressSlider.m */; };
@@ -63,6 +64,7 @@
 
 /* Begin PBXFileReference section */
 		0B1DA4031E714674002D5642 /* LRMacroDefinitionHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LRMacroDefinitionHeader.h; sourceTree = "<group>"; };
+		0B25B74520C4EDC200B9524D /* IJKMediaFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = IJKMediaFramework.framework; sourceTree = "<group>"; };
 		0B41FD9120BFFD46009F462E /* LMIJKVideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMIJKVideoPlayerView.m; sourceTree = "<group>"; };
 		0B41FD9220BFFD46009F462E /* LMIJKVideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMIJKVideoPlayerView.h; sourceTree = "<group>"; };
 		0B41FD9420C12AC5009F462E /* LMIJKVideoPlayerVolumeBrightButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMIJKVideoPlayerVolumeBrightButton.h; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				0BA9F81D1E5D8FBB00E6417E /* AudioToolbox.framework in Frameworks */,
 				0BA9F81B1E5D8FB300E6417E /* AVFoundation.framework in Frameworks */,
 				0BD5E5761FBD836C0068E24F /* libstdc++.tbd in Frameworks */,
+				0B25B74620C4EDC200B9524D /* IJKMediaFramework.framework in Frameworks */,
 				0BA9F8191E5D8FA800E6417E /* CoreGraphics.framework in Frameworks */,
 				0BA9F8171E5D8F9400E6417E /* CoreMedia.framework in Frameworks */,
 				0BA9F8151E5D873300E6417E /* CoreVideo.framework in Frameworks */,
@@ -248,6 +251,7 @@
 		0BA9F8021E5D86A200E6417E /* framework */ = {
 			isa = PBXGroup;
 			children = (
+				0B25B74520C4EDC200B9524D /* IJKMediaFramework.framework */,
 			);
 			path = framework;
 			sourceTree = "<group>";
