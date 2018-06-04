@@ -60,7 +60,6 @@ When the controller is destroyed, remember to call the destroy method of the vid
 - (void)dealloc{
 [self.playerView deallocPlayer];
 }
-}
 ```
 
 
