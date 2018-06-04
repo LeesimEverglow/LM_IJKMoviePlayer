@@ -1,6 +1,6 @@
 # LM_IJKMoviePlayer
 
-[中文详细介绍地址](http://www.jianshu.com/p/3c109b2c5ba9)<br /> 
+[中文详细介绍地址](https://www.jianshu.com/p/4d555d09d3e2)<br /> 
 
 ### 基本效果图
 ![效果图](https://upload-images.jianshu.io/upload_images/1197929-bdc7ea869c0c4541.gif?imageMogr2/auto-orient/strip)
