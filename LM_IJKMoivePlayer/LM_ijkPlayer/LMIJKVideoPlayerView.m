@@ -1,188 +1,147 @@
 //
-//  LMVideoPlayerView.m
+//  LMIJKVideoPlayerView.m
 //  Owhat_v4
 //
-//  Created by Leesim on 17/2/28.
-//  Copyright © 2017年 Owhat. All rights reserved.
+//  Created by Leesim on 2018/5/11.
+//  Copyright © 2018年 Owhat. All rights reserved.
 //
 
+#import "LMIJKVideoPlayerView.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <AVFoundation/AVFoundation.h>
-#import "Masonry.h"
-#import <AVFoundation/AVAudioSession.h>
-#import "LMVideoPlayerView.h"
-#import "LZHProgressSlider.h"
-#import "LZHButton.h"
-#import "LRMacroDefinitionHeader.h"
-#import "XYVideoModel.h"
+#import <AssetsLibrary/ALAssetsLibrary.h>
+#import "LMIJKVideoPlayerProgressSlider.h"
+#import "LMIJKVideoPlayerVolumeBrightButton.h"
 #import <IJKMediaFramework/IJKMediaFramework.h>
-#import "OWTaskTopAlphaImage.h"
-
-#define videoTempProgress 16/25
+#import "LRMacroDefinitionHeader.h"
+#import "Masonry.h"
 
 typedef NS_ENUM(NSUInteger, Direction) {
     DirectionLeftOrRight,
     DirectionUpOrDown,
     DirectionNone
 };
-
-@interface LMVideoPlayerView()<IJKMediaUrlOpenDelegate,LZHButtonDelegate>
-
-/* 视频播放器 */
-@property(nonatomic, strong) id<IJKMediaPlayback>    player;
-@property (nonatomic, strong)  OWTaskTopAlphaImage          *upPlayerView;
-// 工具条
-@property (strong, nonatomic) UIView          *toolView;
-@property (strong, nonatomic) UIView          *navView;
-@property (strong, nonatomic) UILabel         *videoTitle;
-@property (strong, nonatomic) UIButton        *backBtn;
-@property (strong, nonatomic) UIView          *sliderBackView;
-@property (strong, nonatomic) LZHProgressSlider      *slider;
-
-@property (nonatomic, strong) CADisplayLink            *link;
-@property (nonatomic, assign) NSTimeInterval           lastTime;
-
-//全屏按钮
-@property (strong, nonatomic)  UIButton          *fullScreenBtn;
-
-//添加手势的Button
-@property (strong, nonatomic) LZHButton                *button;
-//开始滑动的点
-@property (assign, nonatomic) CGPoint                  startPoint;
-//开始滑动时的亮度
-@property (assign, nonatomic) CGFloat                  startVB;
-//滑动方向
-@property (assign, nonatomic) Direction                direction;
-//滑动开始的播放进度
-@property (assign, nonatomic) CGFloat                  startVideoRate;
-//当期视频播放的进度
-@property (assign, nonatomic) CGFloat                  currentRate;
-//当前的播放时间
-@property (strong, nonatomic)  UILabel           *currTimeLabel;
-//总的播放时间
-@property (strong, nonatomic) UILabel           *totalTimeLabel;
-//全屏按钮
-@property (strong, nonatomic) UIButton          *upFullScreenBtn;
-//定时器
-@property (nonatomic, retain) NSTimer                  *autoDismissTimer;
-
-//toolbar上的开始暂停按钮
-@property (strong, nonatomic) UIButton *startAndStopButton;
-
-//首次开始的按钮
-@property (nonatomic,strong) UIButton * firstPlayButton;
-
-@end
-
-@implementation LMVideoPlayerView{
-    
+@interface LMIJKVideoPlayerView ()<IJKMediaUrlOpenDelegate,LMIJKVideoPlayerVolumeBrightButtonDelegate>
+{
+    //系统音量的滑动控制 用来调节音量
     UISlider *systemSlider;
+    //点击手势
     UITapGestureRecognizer* singleTap;
 }
-#pragma mark - 初始化
 
-- (instancetype)initWithModel:(XYVideoModel*)model
+/* 视频播放器 */
+@property(nonatomic, strong) id<IJKMediaPlayback>player;
+
+// 工具条
+@property (nonatomic,strong) UIView * toolView;
+@property (nonatomic,strong) UIView * navView;
+@property (nonatomic,strong) UIButton * backBtn;
+@property (nonatomic,strong) UIView * sliderBackView;
+@property (nonatomic,strong) LMIJKVideoPlayerProgressSlider * slider;
+@property (nonatomic,strong) CADisplayLink * link;
+@property (nonatomic,assign) NSTimeInterval lastTime;
+//全屏按钮
+@property (strong, nonatomic)  UIButton * fullScreenBtn;
+//添加手势的Button
+@property (strong, nonatomic) LMIJKVideoPlayerVolumeBrightButton * button;
+//开始滑动的点
+@property (assign, nonatomic) CGPoint startPoint;
+//开始滑动时的亮度
+@property (assign, nonatomic) CGFloat startVB;
+//滑动方向
+@property (assign, nonatomic) Direction direction;
+//滑动开始的播放进度
+@property (assign, nonatomic) CGFloat startVideoRate;
+//当期视频播放的进度
+@property (assign, nonatomic) CGFloat currentRate;
+//当前的播放时间
+@property (strong, nonatomic)  UILabel * currTimeLabel;
+//总的播放时间
+@property (strong, nonatomic) UILabel * totalTimeLabel;
+//定时器
+@property (nonatomic, retain) NSTimer * autoDismissTimer;
+//toolbar上的开始暂停按钮
+@property (strong, nonatomic) UIButton * startAndStopButton;
+//首次开始的按钮
+@property (nonatomic,strong) UIButton * firstPlayButton;
+//是否全屏
+@property (assign, nonatomic) BOOL isRotate;
+//封面图
+@property (nonatomic,strong) UIImage * coverImage;
+//推出前的父视图
+@property (nonatomic,weak) UIView * movieViewParentView;
+//推出前的frame
+@property (nonatomic,assign) CGRect movieViewFrame;
+
+@end;
+
+@implementation LMIJKVideoPlayerView
+
+
+
+- (instancetype)initWithFrame:(CGRect)frame
 {
-    self = [super init];
+    self = [super initWithFrame:frame];
     if (self) {
-        
-        self.backgroundColor = [UIColor blackColor];
-        
-        self.frame = CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.width*videoTempProgress);
-        
-        //初始化播放控制器
-        [self setupUpPlayerWith:model];
-        //初始化UI
-        [self setUIWithModel:model];
+        [self prepareUI];
     }
     return self;
 }
 
 
-- (void)setUIWithModel:(XYVideoModel *)model{
+- (void)prepareUI{
     
     __weak __typeof(self) weakSelf = self;
     //背景view
-    self.upPlayerView = [[OWTaskTopAlphaImage alloc]init];
-    self.upPlayerView.contentMode =  UIViewContentModeScaleAspectFit;
-    self.upPlayerView.userInteractionEnabled = YES;
+    self.upPlayerView = [[UIImageView alloc]init];
+    self.upPlayerView.backgroundColor = [UIColor blackColor];
     [self addSubview:self.upPlayerView];
-    //顶部封面图
-    self.upPlayerView.image = [UIImage imageNamed:model.coverimg];
-    
+    self.upPlayerView.userInteractionEnabled = YES;
+    self.upPlayerView.contentMode = UIViewContentModeScaleAspectFit;
     [self.upPlayerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        
-        make.top.left.right.bottom.mas_equalTo(0);
-        
+        make.left.right.top.bottom.mas_equalTo(0);
     }];
-    
     
     //工具栏
     self.toolView = [[UIView alloc]init];
     self.toolView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.56];
     [self.upPlayerView addSubview:self.toolView];
+    
+    CGFloat toolHeight = iPhoneX ? (TabBarHeight):(48);
+    
     [self.toolView mas_makeConstraints:^(MASConstraintMaker *make) {
-        
         make.left.right.mas_equalTo(0);
         make.bottom.mas_equalTo(0);
-        make.height.mas_equalTo(48);
+        make.height.mas_equalTo(toolHeight);
     }];
-    
     
     //导航栏
     self.navView = [[UIView alloc]init];
     self.navView.backgroundColor = LRRGBAColor(0, 0, 0, 0.56);
-    
     //先隐藏
     self.navView.hidden = YES;
     [self.upPlayerView addSubview:self.navView];
     
     [self.navView mas_makeConstraints:^(MASConstraintMaker *make) {
-        
         make.left.right.mas_offset(0);
         make.top.mas_offset(0);
         make.height.mas_equalTo(48);
-        
     }];
     
     //返回按钮
     self.backBtn = [[UIButton alloc]init];
-    
     [self.navView addSubview:self.backBtn];
-    
-    
     [self.backBtn setImage:[UIImage imageNamed:@"nav_btn_back_white"] forState:UIControlStateNormal];
-    
     [self.backBtn addTarget:self action:@selector(backBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    
     [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        
         make.left.mas_offset(0);
         make.top.mas_offset(0);
         make.height.width.mas_equalTo(48);
-        
     }];
     
-    //标题
-    self.videoTitle = [[UILabel alloc]init];
-    self.videoTitle.font = [UIFont systemFontOfSize:14];
-    self.videoTitle.textColor = [UIColor whiteColor];
-    self.videoTitle.text = model.name;
-    [self.navView addSubview:self.videoTitle];
-    
-    [self.videoTitle mas_makeConstraints:^(MASConstraintMaker *make) {
-        
-        make.top.mas_offset(0);
-        make.bottom.mas_equalTo(0);
-        make.left.mas_equalTo(weakSelf.backBtn.mas_right).offset(16);
-        make.right.mas_offset(-20);
-        
-    }];
-    
-
     
     //添加自定义的Button到视频画面上 用于手势控制相关
-    _button = [[LZHButton alloc]init];
+    _button = [[LMIJKVideoPlayerVolumeBrightButton alloc]init];
     _button.touchDelegate = self;
     [self addSubview:_button];
     [_button mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -191,27 +150,23 @@ typedef NS_ENUM(NSUInteger, Direction) {
         make.bottom.equalTo(self.toolView.mas_top);
     }];
     
+    
     //播放按钮 初始化界面 将中心的播放按钮隐藏
     self.firstPlayButton = [[UIButton alloc]init];
     [self.firstPlayButton setImage:[UIImage imageNamed:@"icon_video_play"] forState:UIControlStateNormal];
     [self addSubview:self.firstPlayButton];
-    
     [self.firstPlayButton mas_makeConstraints:^(MASConstraintMaker *make) {
-       
+        
         make.width.height.mas_equalTo(60);
         make.center.equalTo(weakSelf);
         
     }];
-    
     [self.firstPlayButton addTarget:self action:@selector(firstPlayAction:) forControlEvents:UIControlEventTouchUpInside];
     
- 
+    
     //播放按钮
     self.startAndStopButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    
     [self.toolView addSubview:self.startAndStopButton];
-    
-    
     [self.startAndStopButton mas_makeConstraints:^(MASConstraintMaker *make) {
         
         make.left.top.mas_equalTo(0);
@@ -223,16 +178,13 @@ typedef NS_ENUM(NSUInteger, Direction) {
     [self.startAndStopButton setImage:[UIImage imageNamed:@"icon_video_pause_big"] forState:UIControlStateNormal];
     [self.startAndStopButton setImage:[UIImage imageNamed:@"icon_video_play_big"] forState:UIControlStateSelected];
     [self.startAndStopButton addTarget:self action:@selector(playOrPause:) forControlEvents:UIControlEventTouchUpInside];
-    self.startAndStopButton.selected = YES;
     
     //全屏按钮
     self.fullScreenBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    
     [self.toolView addSubview:self.fullScreenBtn];
     
     //全屏的事件
     [self.fullScreenBtn addTarget:self action:@selector(fullScreenBtnCicked:) forControlEvents:UIControlEventTouchUpInside];
-    
     [self.fullScreenBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         
         make.right.mas_equalTo(0);
@@ -250,15 +202,14 @@ typedef NS_ENUM(NSUInteger, Direction) {
     self.currTimeLabel = [[UILabel alloc]init];
     self.currTimeLabel.font = [UIFont systemFontOfSize:9];
     self.currTimeLabel.text = @"00:00:00";
-    self.currTimeLabel.textAlignment = NSTextAlignmentLeft;
+    self.currTimeLabel.textAlignment = NSTextAlignmentRight;
     self.currTimeLabel.textColor = [UIColor whiteColor];
     [self.toolView addSubview:self.currTimeLabel];
     
     [self.currTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        
         make.left.mas_equalTo(weakSelf.startAndStopButton.mas_right).offset(5);
         make.top.bottom.mas_equalTo(0);
-        make.width.mas_equalTo(41);
+        make.width.mas_equalTo(43);
     }];
     
     //全部时间
@@ -270,37 +221,30 @@ typedef NS_ENUM(NSUInteger, Direction) {
     [self.toolView addSubview:self.totalTimeLabel];
     
     [self.totalTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        
         make.right.mas_equalTo(weakSelf.fullScreenBtn.mas_left).offset(-5);
         make.top.bottom.mas_equalTo(0);
-        make.width.mas_equalTo(41);
+        make.width.mas_equalTo(43);
     }];
     
-    
+
     //滑块的背景
-    
     self.sliderBackView = [[UIView alloc]init];
-    
     [self.toolView addSubview:self.sliderBackView];
-    
     [self.sliderBackView mas_makeConstraints:^(MASConstraintMaker *make) {
-        
         make.left.mas_equalTo(weakSelf.currTimeLabel.mas_right).offset(5);
         make.right.mas_equalTo(weakSelf.totalTimeLabel.mas_left).offset(-5);
         make.top.bottom.mas_equalTo(0);
-        
     }];
     
     
     //滑块显示进度和缓冲
-    self.slider = [[LZHProgressSlider alloc] initWithFrame:self.sliderBackView.bounds direction:AC_SliderDirectionHorizonal];
+    self.slider = [[LMIJKVideoPlayerProgressSlider alloc] initWithFrame:self.sliderBackView.bounds direction:AC_SliderDirectionHorizonal];
     [self.sliderBackView addSubview:self.slider];
     self.slider.enabled = NO;
     [self.slider addTarget:self action:@selector(progressValueChange:) forControlEvents:UIControlEventValueChanged];
     [self.slider mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.sliderBackView);
     }];
-    
     
     //系统的音量
     MPVolumeView *volumeView = [[MPVolumeView alloc]init];
@@ -316,261 +260,256 @@ typedef NS_ENUM(NSUInteger, Direction) {
             systemSlider = (UISlider *)view;
         }
     }
+    systemSlider.hidden = YES;
     systemSlider.autoresizesSubviews = NO;
     systemSlider.autoresizingMask = UIViewAutoresizingNone;
     [self addSubview:systemSlider];
-   
+    
     // 单击的 Recognizer
     singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     singleTap.numberOfTapsRequired = 1; // 单击
     singleTap.numberOfTouchesRequired = 1;
     [self addGestureRecognizer:singleTap];
     
-    
-    
     //默认首次进入页面 隐藏
     self.toolView.hidden = YES;
-    
-
+    self.startAndStopButton.selected = YES;
 }
-// 初始化视频
-- (void)setupUpPlayerWith:(XYVideoModel*)model
-{
-    
-    _player = [[IJKFFMoviePlayerController alloc] initWithContentURL:model.url withOptions:nil];
-    [_player setShouldAutoplay:NO];
+
+
+-(void)setVideoUrl:(NSString *)videoUrl{
+    _videoUrl = videoUrl;
+    //旋转方向
+    NSInteger rotationNumber = [self degressFromVideoFileWithURL:[NSURL URLWithString:videoUrl]];
+    IJKFFOptions *options = [IJKFFOptions optionsByDefault]; //使用默认配置
+    [options setPlayerOptionIntValue:1 forKey:@"auto_convert"];
+    self.player = [[IJKFFMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:videoUrl] withOptions:options];
+    //默认为自动播放 该属性使得视频不进行自动播放
+    //如果需要自动播放 则需要去除该shushing
+    [self.player setShouldAutoplay:NO];
     UIView *playerView = [self.player view];
-    playerView.frame = self.bounds;
+    if (rotationNumber == 90) {
+        playerView.frame = CGRectMake(playerView.frame.origin.x,playerView.frame.origin.y, self.bounds.size.height, self.bounds.size.width);
+        playerView.transform = CGAffineTransformMakeRotation(M_PI_2);
+        playerView.frame = CGRectMake(0,0, playerView.frame.size.width, playerView.frame.size.height);
+    }else{
+        playerView.frame = self.bounds;
+    }
     playerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self addSubview:playerView];
-    [self insertSubview:playerView atIndex:1];
-    [_player setScalingMode:IJKMPMovieScalingModeAspectFit];
+    [self sendSubviewToBack:playerView];
+    [self.player setScalingMode:IJKMPMovieScalingModeAspectFit];
     [self installMovieNotificationObservers];
+    [self.player prepareToPlay];
     
-    [_player prepareToPlay];
-    
-    
-    self.link = [CADisplayLink displayLinkWithTarget:self selector:@selector(upadte)];
-    [self.link addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-    self.link.paused = YES;
 }
 
-- (BOOL)willOpenUrl:(IJKMediaUrlOpenData*) urlOpenData
+
+//音量调节
+- (void)volumeChanged:(NSNotification *)notification
 {
-    return YES;
-}
 
-#pragma mark - 播放暂停按钮事件
+}
+//即将打开url链接
+-(void)willOpenUrl:(IJKMediaUrlOpenData*)urlOpenData
+{
+    
+}
 
 //首次进行播放按钮
 -(void)firstPlayAction:(UIButton*)button{
-
-    self.upPlayerView.image = nil;
-    
-    //底部工具栏隐藏关闭
-    self.toolView.hidden = NO;
-    //顶部导航隐藏关闭
-    self.navView.hidden = NO;
-    
-    //执行开始
-    [self playOrPause:self.startAndStopButton];
-    
-    //按钮移除
-    [button removeFromSuperview];
-    
+    //正式进入播放状态
+    [self beginPlayMediaWithButton:button];
 }
 
+//正式开始播放视频
+- (void)beginPlayMediaWithButton:(UIButton *)button{
+    //开始播放
+    self.link = [CADisplayLink displayLinkWithTarget:self selector:@selector(upadte)];
+    [self.link addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+    self.link.paused = YES;
+    //执行开始
+    [self playOrPause:self.startAndStopButton];
+    self.firstPlayButton.hidden = YES;
+    //隐藏视频播放的第一帧
+    self.upPlayerView.image = nil;
+    //隐藏颜色
+    self.upPlayerView.backgroundColor = [UIColor clearColor];
+}
 // 暂停按钮的监听
 - (void)playOrPause:(UIButton *)sender {
     sender.selected = !sender.selected;
     if (sender.selected == NO) {
         [self.player play];
         self.link.paused = NO;
+
     }else{
         [self.player pause];
         self.link.paused = YES;
-  
+
     }
 }
-//如果加载失败
-- (void)reloadAction:(UIButton *)sender{
-    
-    //如果加载失败
-    //如果按钮为播放状态
-    if (self.startAndStopButton.selected == NO) {
-        
-        //如果结束时 状态为暂停 执行两次 再次播放
-        [self playOrPause:self.startAndStopButton];
-        [self playOrPause:self.startAndStopButton];
-    }
-    
-}
-
-
+//全屏之后触发的方法
 - (void)backBtnClicked:(id)sender {
-    
-    if ([self.delegate respondsToSelector:@selector(backToBeforeVC)]) {
-        
-        [self.delegate backToBeforeVC];
-        
-        if (self.isRotate) {
-            
-            [self fullScreenBtnCicked:self.fullScreenBtn];
-        }
-        
+    if (self.isRotate) {
+        [self fullScreenBtnCicked:self.fullScreenBtn];
     }
-    
 }
-//全屏
+//点击全屏按钮触发的方法
 - (void)fullScreenBtnCicked:(UIButton *)sender {
     
-    sender.selected = !sender.selected;
-    
-    if ([self.delegate respondsToSelector:@selector(fullScreenWithPlayerView:)]) {
-        
+        sender.selected = !sender.selected;
         self.isRotate = !self.isRotate;
-        
-        [self.delegate fullScreenWithPlayerView:self];
-        
         [self.slider setNeedsDisplay];
-        
-        UIView *playerView = [self.player view];
+
         if (self.isRotate) {
+            self.navView.hidden = NO;
+            [self.toolView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(48);
+            }];
+            //即将进入全屏幕之前 记录当前视图的父视图和记录进入之前的frame
+            self.movieViewParentView = self.superview;
+            self.movieViewFrame = self.frame;
+            //记录之后将视频控件 加入进入到当前window界面上
+            CGRect rectInWindow = [self convertRect:self.bounds toView:[UIApplication sharedApplication].keyWindow];
+            [self removeFromSuperview];
+            self.frame = rectInWindow;
+            [[UIApplication sharedApplication].keyWindow addSubview:self];
             
-            playerView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+            [UIView animateWithDuration:0.5 animations:^{
+                //同时改变视频播放界面的transform
+                self.transform = CGAffineTransformMakeRotation(M_PI_2);
+                self.bounds = CGRectMake(0, 0, CGRectGetHeight(self.superview.bounds), CGRectGetWidth(self.superview.bounds));
+                self.center = CGPointMake(CGRectGetMidX(self.superview.bounds), CGRectGetMidY(self.superview.bounds));
+                self.upPlayerView.frame = self.bounds;
+            } completion:^(BOOL finished) {
+                
+            }];
+            
         }else{
-            
-            playerView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.width*videoTempProgress);
+            self.navView.hidden = YES;
+            CGFloat toolHeight = iPhoneX ? (TabBarHeight):(48);
+            [self.toolView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(toolHeight);
+            }];
+            self.button.userInteractionEnabled = YES;
+            CGRect frame = [self.movieViewParentView convertRect:self.movieViewFrame toView:[UIApplication sharedApplication].keyWindow];
+            [UIView animateWithDuration:0.5 animations:^{
+                self.transform = CGAffineTransformIdentity;
+                self.frame = frame;
+                self.upPlayerView.frame = self.bounds;
+            } completion:^(BOOL finished) {
+                /*
+                 * movieView回到小屏位置
+                 */
+                [self removeFromSuperview];
+                self.frame = self.movieViewFrame;
+                [self.movieViewParentView addSubview:self];
+    
+            }];
         }
-        playerView.center = self.center;
-        
-    }
 }
 #pragma mark - 单击手势方法
 - (void)handleSingleTap:(UITapGestureRecognizer *)sender{
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(autoDismissBottomView:) object:nil];
     [self.autoDismissTimer invalidate];
     self.autoDismissTimer = nil;
-    self.autoDismissTimer = [NSTimer timerWithTimeInterval:5.0 target:self selector:@selector(autoDismissBottomView:) userInfo:nil repeats:YES];
+    self.autoDismissTimer = [NSTimer timerWithTimeInterval:3.0 target:self selector:@selector(autoDismissBottomView:) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.autoDismissTimer forMode:NSDefaultRunLoopMode];
     [UIView animateWithDuration:0.5 animations:^{
         if (self.toolView.alpha == 0.0) {
             self.toolView.alpha = 1.0;
             self.navView.alpha = 1.0;
-            
         }else{
             self.toolView.alpha = 0.0;
             self.navView.alpha = 0.0;
-            
         }
     } completion:^(BOOL finish){
         
     }];
 }
-#pragma mark autoDismissBottomView
+#pragma mark 自动消失监听计时器
 -(void)autoDismissBottomView:(NSTimer *)timer{
-    
     if (![self.player isPlaying]) {//暂停状态
-        
     }else{
         if (self.navView.alpha==1.0) {
             [UIView animateWithDuration:0.5 animations:^{
                 self.toolView.alpha = 0.0;
                 self.navView.alpha = 0.0;
-                //                self.playOrPauseBtn.alpha = 0.0;
-                
             } completion:^(BOOL finish){
-                
+
             }];
         }
     }
 }
-//时间显示转换
-- (NSString *)stringWithTime:(NSTimeInterval)time
-{
-    NSInteger h = time / 3600;
-    NSInteger m = ((int)time%3600)/60;
-    NSInteger s = (NSInteger)time % 60;
-    
-    NSString *stringtime = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", h, m, (long)s];
-    
-    return stringtime;
-}
 //处理滑块
-- (void)progressValueChange:(LZHProgressSlider *)slider
+- (void)progressValueChange:(LMIJKVideoPlayerProgressSlider *)slider
 {
-
     NSTimeInterval duration = self.slider.sliderPercent* self.player.duration;
-
     //设置正在播放时间
     self.currTimeLabel.text = [self stringWithTime:duration];
     // 设置当前播放时间
     self.player.currentPlaybackTime = duration;
-    
     //如果不在播放中 则开始播放
     if (![self.player isPlaying]) {
-       
         self.startAndStopButton.selected = NO;
         [self.player play];
         self.link.paused = NO;
-        
     }
 }
-//更新方法
+//播放视频的过程中 不断调用监控状态的方法
 - (void)upadte
 {
-
+    //保证播放状态图片为空
+    self.toolView.hidden = NO;
     NSTimeInterval current = self.player.currentPlaybackTime;
     NSTimeInterval total = self.player.duration;
     //如果用户在手动滑动滑块，则不对滑块的进度进行设置重绘
     if (!self.slider.isSliding) {
-        self.slider.sliderPercent = current/total;
+        CGFloat playendpercent = 0;
+        //IJKPlayer 对currentPlaybackTime duration 两个属性的获取并不准确
+        //所以经常会出现当前播放时间快到结尾的时候不能跟总时间对应上的情况
+        if (total>10&&total<15) {
+            playendpercent = 0.95;
+        }else if (total>5&&total<10){
+            playendpercent = 0.91;
+        }else if (total>0&&total<5){
+            playendpercent = 0.86;
+        }else if(total>15){
+            playendpercent = 0.99;
+        }
+        //如果正在播放才去改变当前播放时间 防止播放时间突然变动
+        if (current/total>playendpercent) {
+            self.slider.sliderPercent = 1.0;
+        }else{
+            self.slider.sliderPercent = current/total;
+        }
     }
     if (current!=self.lastTime) {
-  
-        if (self.navView.alpha==1.0) {
-         
-        }else{
-        
-        }
         // 更新播放时间
-        
         if (current<0) {
-            
             current = 0;
         }
-        
         if (current>total) {
-            
             current = total;
         }
-        
+        //如果正在播放才去改变当前播放时间 防止播放时间突然变动
         self.currTimeLabel.text = [self stringWithTime:current];
         self.totalTimeLabel.text = [self stringWithTime:total];
         
-    }else{
-
     }
     self.lastTime = current;
     //缓冲进度
     NSTimeInterval loadedTime = self.player.playableDuration;
-
     if (!self.slider.isSliding) {
-        
-        if (loadedTime/total>0.9) {
-         
-        self.slider.progressPercent = 1;
-            
+        if (loadedTime/total>0.8) {
+            self.slider.progressPercent = 1;
         }else{
-        
-        self.slider.progressPercent = loadedTime/total;
-        
+            self.slider.progressPercent = loadedTime/total;
         }
-
     }
-    //播放结束
-    if ([self.currTimeLabel.text isEqualToString:self.totalTimeLabel.text] && ![self.totalTimeLabel.text isEqualToString:@"00:00:00"]) {
-        
+    if (current >= total && ![self.totalTimeLabel.text isEqualToString:@"00:00:00"] && total != 0) {
+    
         //播放结束 重置状态
         self.slider.sliderPercent = 0;
         self.lastTime = 0;
@@ -579,20 +518,15 @@ typedef NS_ENUM(NSUInteger, Direction) {
         self.currTimeLabel.text = [self stringWithTime:0];
         self.player.currentPlaybackTime = 0;
         [self.player pause];
-        
         [UIView animateWithDuration:0.5 animations:^{
             self.toolView.alpha = 1.0;
             self.navView.alpha = 1.0;
         } completion:^(BOOL finish){
-            
         }];
     }
-    
 }
 
-#pragma mark - 自定义Button的代理***********************************************************
-#pragma mark - 开始触摸
-/*************************************************************************/
+#pragma mark - 开始触摸 自定义Button的代理
 - (void)touchesBeganWithPoint:(CGPoint)point {
     //记录首次触摸坐标
     self.startPoint = point;
@@ -614,14 +548,11 @@ typedef NS_ENUM(NSUInteger, Direction) {
 }
 #pragma mark - 结束触摸
 - (void)touchesEndWithPoint:(CGPoint)point {
-    
     CGPoint panPoint = CGPointMake(point.x - self.startPoint.x, point.y - self.startPoint.y);
     if ((panPoint.x >= -5 && panPoint.x <= 5) && (panPoint.y >= -5 && panPoint.y <= 5)) {
-        
         [self handleSingleTap:singleTap];
         return;
     }
-    
     if (self.direction == DirectionLeftOrRight) {
         if (self.player.isPreparedToPlay) {
             NSTimeInterval duration = self.currentRate* self.player.duration;
@@ -631,21 +562,10 @@ typedef NS_ENUM(NSUInteger, Direction) {
         }
     }
     else if (self.direction == DirectionUpOrDown){
-        
-
     }
 }
 
 #pragma mark - 拖动
-
-//音量调节
-- (void)volumeChanged:(NSNotification *)notification
-{
-    
-    
-    
-}
-
 - (void)touchesMoveWithPoint:(CGPoint)point {
     //得出手指在Button上移动的距离
     CGPoint panPoint = CGPointMake(point.x - self.startPoint.x, point.y - self.startPoint.y);
@@ -659,7 +579,6 @@ typedef NS_ENUM(NSUInteger, Direction) {
             self.direction = DirectionUpOrDown;
         }
     }
-    
     if (self.direction == DirectionNone) {
         return;
     } else if (self.direction == DirectionUpOrDown) {
@@ -701,47 +620,8 @@ typedef NS_ENUM(NSUInteger, Direction) {
         self.slider.sliderPercent = self.currentRate;
     }
 }
-//重写set方法
-- (void)setVideoModel:(XYVideoModel *)videoModel{
-    
-    _videoModel = videoModel;
-    
-    [self changeCurrentplayerItemWithVideoModel];
-}
-//切换当前播放的内容
-- (void)changeCurrentplayerItemWithVideoModel
-{
-    //移除当前player的监听
-    [self.player shutdown];
-    [self.player.view removeFromSuperview];
-    [self removeMovieNotificationObservers];
-    //关闭定时器
-    [self.autoDismissTimer invalidate];
-    self.autoDismissTimer = nil;
-    
-    _player = [[IJKFFMoviePlayerController alloc] initWithContentURL:self.videoModel.url withOptions:nil];
-    UIView *playerView = [self.player view];
-    playerView.frame = self.bounds;
-    playerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self addSubview:playerView];
-    //    [self insertSubview:playerView atIndex:1];
-    [self insertSubview:playerView aboveSubview:self.navView];
-    [_player setScalingMode:IJKMPMovieScalingModeAspectFit];
-    [self installMovieNotificationObservers];
-    
-    if (![self.player isPlaying]) {
-        [self.player prepareToPlay];
-        
-    }
-    self.videoTitle.text = self.videoModel.name;
-    //self.playOrPauseBtn.enabled = NO;
-    //由暂停状态切换时候 开启定时器，将暂停按钮状态设置为播放状态
-    self.link.paused = NO;
-    self.startAndStopButton.selected = NO;
-    self.slider.enabled = NO;
-    
-    
-}
+
+#pragma mark 注册视频监听
 - (void)loadStateDidChange:(NSNotification*)notification
 {
     //    MPMovieLoadStateUnknown        = 0,
@@ -779,7 +659,9 @@ typedef NS_ENUM(NSUInteger, Direction) {
             self.currTimeLabel.text = [self stringWithTime:0];
             self.player.currentPlaybackTime = 0;
             [self.player pause];
- 
+            self.firstPlayButton.hidden = NO;
+            self.toolView.hidden = YES;
+            
             break;
             
         case IJKMPMovieFinishReasonUserExited:
@@ -788,9 +670,7 @@ typedef NS_ENUM(NSUInteger, Direction) {
             
         case IJKMPMovieFinishReasonPlaybackError:{
             NSLog(@"playbackStateDidChange: IJKMPMovieFinishReasonPlaybackError: %d\n", reason);
-          
             self.link.paused = YES;
-  
             break;
         }
         default:
@@ -803,12 +683,11 @@ typedef NS_ENUM(NSUInteger, Direction) {
 {
     NSLog(@"mediaIsPreparedToPlayDidChange\n");
     self.slider.enabled = YES;
-
+    
     self.link.paused = NO;
-
     //5s dismiss bottomView
     if (self.autoDismissTimer==nil) {
-        self.autoDismissTimer = [NSTimer timerWithTimeInterval:5.0 target:self selector:@selector(autoDismissBottomView:) userInfo:nil repeats:YES];
+        self.autoDismissTimer = [NSTimer timerWithTimeInterval:3.0 target:self selector:@selector(autoDismissBottomView:) userInfo:nil repeats:YES];
         [[NSRunLoop currentRunLoop] addTimer:self.autoDismissTimer forMode:NSDefaultRunLoopMode];
     }
 }
@@ -829,16 +708,13 @@ typedef NS_ENUM(NSUInteger, Direction) {
         }
         case IJKMPMoviePlaybackStatePlaying: {
             NSLog(@"IJKMPMoviePlayBackStateDidChange %d: playing", (int)_player.playbackState);
+            
             break;
         }
         case IJKMPMoviePlaybackStatePaused: {
             
             //如果按钮为播放状态
             if (self.startAndStopButton.selected == NO) {
-                
-                //如果结束时 状态为暂停 执行两次 再次播放
-                [self playOrPause:self.startAndStopButton];
-                [self playOrPause:self.startAndStopButton];
             }
             
             NSLog(@"IJKMPMoviePlayBackStateDidChange %d: paused", (int)_player.playbackState);
@@ -851,7 +727,7 @@ typedef NS_ENUM(NSUInteger, Direction) {
         case IJKMPMoviePlaybackStateSeekingForward:
         case IJKMPMoviePlaybackStateSeekingBackward: {
             NSLog(@"IJKMPMoviePlayBackStateDidChange %d: seeking", (int)_player.playbackState);
-           
+            
             break;
         }
         default: {
@@ -860,8 +736,6 @@ typedef NS_ENUM(NSUInteger, Direction) {
         }
     }
 }
-
-#pragma mark Install Movie Notifications
 
 /* Register observers for the various movie object notifications. */
 -(void)installMovieNotificationObservers
@@ -902,7 +776,64 @@ typedef NS_ENUM(NSUInteger, Direction) {
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
 }
-#pragma mark - 内存回收
+//获取url视频的播放方向
+- (NSUInteger)degressFromVideoFileWithURL:(NSURL *)url
+{
+    NSUInteger degress = 0;
+    
+    AVAsset *asset = [AVAsset assetWithURL:url];
+    NSArray *tracks = [asset tracksWithMediaType:AVMediaTypeVideo];
+    if([tracks count] > 0) {
+        AVAssetTrack *videoTrack = [tracks objectAtIndex:0];
+        CGAffineTransform t = videoTrack.preferredTransform;
+        
+        if(t.a == 0 && t.b == 1.0 && t.c == -1.0 && t.d == 0){
+            // Portrait
+            degress = 90;
+        }else if(t.a == 0 && t.b == -1.0 && t.c == 1.0 && t.d == 0){
+            // PortraitUpsideDown
+            degress = 270;
+        }else if(t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0){
+            // LandscapeRight
+            degress = 0;
+        }else if(t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0){
+            // LandscapeLeft
+            degress = 180;
+        }
+    }
+    
+    return degress;
+}
+
+//时间显示转换
+- (NSString *)stringWithTime:(NSTimeInterval)time
+{
+    NSInteger h = time / 3600;
+    NSInteger m = ((int)time%3600)/60;
+    NSInteger s = (NSInteger)time % 60;
+    
+    NSString *stringtime = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", h, m, (long)s];
+    
+    return stringtime;
+}
+
+//根据视频的url获取视频的第一帧图片
+//比较消时，注意放入异步线程处理
+- (UIImage*)getVideoPreViewImageWithUrl:(NSString *)videoPath
+{
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:[NSURL URLWithString:videoPath] options:nil];
+    AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    gen.appliesPreferredTrackTransform = YES;
+    CMTime time = CMTimeMakeWithSeconds(0.0, 600);
+    NSError *error = nil;
+    CMTime actualTime;
+    CGImageRef image = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
+    UIImage *img = [[UIImage alloc] initWithCGImage:image];
+    CGImageRelease(image);
+    return img;
+}
+
+//销毁播放器的步骤
 - (void)deallocPlayer
 {
     [self.player shutdown];
@@ -912,17 +843,21 @@ typedef NS_ENUM(NSUInteger, Direction) {
     self.autoDismissTimer = nil;
     [self removeMovieNotificationObservers];
 }
-//判断是否正在播放 来决定是否暂停
-- (void)playingOrNot{
-    
-    //如果为播放中 则进行暂停处理
-    if ([(IJKFFMoviePlayerController*)self.player playbackState] == IJKMPMoviePlaybackStatePlaying) {
-        
-        [(IJKFFMoviePlayerController*)self.player pause];
-        self.startAndStopButton.selected = !self.startAndStopButton.selected;
+//暂停播放
+- (void)pausePlayer{
+    if ([self.player isPlaying]) {
+        self.startAndStopButton.selected = YES;
+        self.firstPlayButton.hidden = NO;
+        [self.player pause];
+        self.link.paused = YES;
     }
-    
+}
+//开始播放
+-(void)playPlayer{
+    if (![self.player isPlaying]) {
+        [self playOrPause:self.startAndStopButton];
+        self.startAndStopButton.selected = NO;
+    }
 }
 
 @end
-

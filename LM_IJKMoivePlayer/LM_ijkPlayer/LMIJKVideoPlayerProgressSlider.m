@@ -1,16 +1,16 @@
 //
-//  LZHProgressSlider.m
-//  IJKPlayerDemo
+//  LMIJKVideoPlayerProgressSlider.m
+//  LM_IJKMoivePlayer
 //
-//  Created by lzh on 16/7/22.
-//  Copyright © 2016年 lzh. All rights reserved.
+//  Created by Leesim on 2018/6/1.
+//  Copyright © 2018年 LiMing. All rights reserved.
 //
 
-#import "LZHProgressSlider.h"
+#import "LMIJKVideoPlayerProgressSlider.h"
 
 #define RGBColor(r,g,b,a) [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a]
 
-@interface LZHProgressSlider ()
+@interface LMIJKVideoPlayerProgressSlider ()
 
 @property (nonatomic, strong) UIColor *lineColor;//整条线的颜色
 @property (nonatomic, strong) UIColor *slidedLineColor;//滑动过的线的颜色
@@ -23,9 +23,9 @@
 
 @end
 
-@implementation LZHProgressSlider
+@implementation LMIJKVideoPlayerProgressSlider
 
-- (id)initWithFrame:(CGRect)frame direction:(LZHSliderDirection)direction{
+- (id)initWithFrame:(CGRect)frame direction:(LMIJKVideoPlayerProgressSliderDirection)direction{
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
@@ -198,5 +198,6 @@
         [self sendActionsForControlEvents:UIControlEventValueChanged];
     }
 }
+
 
 @end

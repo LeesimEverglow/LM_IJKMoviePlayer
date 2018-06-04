@@ -1,14 +1,14 @@
 //
-//  ZYLButton.m
-//  IJKPlayerDemo
+//  LMIJKVideoPlayerVolumeBrightButton.m
+//  LM_IJKMoivePlayer
 //
-//  Created by lzh on 16/7/22.
-//  Copyright © 2016年 lzh. All rights reserved.
+//  Created by Leesim on 2018/6/1.
+//  Copyright © 2018年 LiMing. All rights reserved.
 //
 
-#import "LZHButton.h"
+#import "LMIJKVideoPlayerVolumeBrightButton.h"
 
-@implementation LZHButton
+@implementation LMIJKVideoPlayerVolumeBrightButton
 
 //触摸开始
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -33,5 +33,6 @@
     CGPoint currentP = [touch locationInView:self];
     [self.touchDelegate touchesMoveWithPoint:currentP];
 }
+
 
 @end

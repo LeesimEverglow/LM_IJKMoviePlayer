@@ -7,12 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B1DA40C1E714674002D5642 /* coverimg.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 0B1DA4001E714674002D5642 /* coverimg.jpeg */; };
-		0B1DA40D1E714674002D5642 /* LMVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B1DA4021E714674002D5642 /* LMVideoPlayerView.m */; };
-		0B1DA40E1E714674002D5642 /* LZHButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B1DA4051E714674002D5642 /* LZHButton.m */; };
-		0B1DA40F1E714674002D5642 /* LZHProgressSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B1DA4071E714674002D5642 /* LZHProgressSlider.m */; };
-		0B1DA4101E714674002D5642 /* OWTaskTopAlphaImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B1DA4091E714674002D5642 /* OWTaskTopAlphaImage.m */; };
-		0B1DA4111E714674002D5642 /* XYVideoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B1DA40B1E714674002D5642 /* XYVideoModel.m */; };
+		0B41FD9320BFFD46009F462E /* LMIJKVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B41FD9120BFFD46009F462E /* LMIJKVideoPlayerView.m */; };
+		0B41FD9620C12AC5009F462E /* LMIJKVideoPlayerVolumeBrightButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B41FD9520C12AC5009F462E /* LMIJKVideoPlayerVolumeBrightButton.m */; };
+		0B41FD9920C12B2A009F462E /* LMIJKVideoPlayerProgressSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B41FD9820C12B2A009F462E /* LMIJKVideoPlayerProgressSlider.m */; };
 		0BA9F7D11E5D868C00E6417E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9F7D01E5D868C00E6417E /* main.m */; };
 		0BA9F7D41E5D868C00E6417E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9F7D31E5D868C00E6417E /* AppDelegate.m */; };
 		0BA9F7D71E5D868C00E6417E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9F7D61E5D868C00E6417E /* ViewController.m */; };
@@ -44,6 +41,7 @@
 		0BA9F8501E5D986600E6417E /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9F8431E5D986600E6417E /* NSLayoutConstraint+MASDebugAdditions.m */; };
 		0BA9F8511E5D986600E6417E /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9F8451E5D986600E6417E /* View+MASAdditions.m */; };
 		0BA9F8521E5D986600E6417E /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9F8481E5D986600E6417E /* ViewController+MASAdditions.m */; };
+		0BD5E5761FBD836C0068E24F /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BD5E5751FBD836C0068E24F /* libstdc++.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,18 +62,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0B1DA4001E714674002D5642 /* coverimg.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = coverimg.jpeg; sourceTree = "<group>"; };
-		0B1DA4011E714674002D5642 /* LMVideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMVideoPlayerView.h; sourceTree = "<group>"; };
-		0B1DA4021E714674002D5642 /* LMVideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMVideoPlayerView.m; sourceTree = "<group>"; };
 		0B1DA4031E714674002D5642 /* LRMacroDefinitionHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LRMacroDefinitionHeader.h; sourceTree = "<group>"; };
-		0B1DA4041E714674002D5642 /* LZHButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZHButton.h; sourceTree = "<group>"; };
-		0B1DA4051E714674002D5642 /* LZHButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZHButton.m; sourceTree = "<group>"; };
-		0B1DA4061E714674002D5642 /* LZHProgressSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZHProgressSlider.h; sourceTree = "<group>"; };
-		0B1DA4071E714674002D5642 /* LZHProgressSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZHProgressSlider.m; sourceTree = "<group>"; };
-		0B1DA4081E714674002D5642 /* OWTaskTopAlphaImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTaskTopAlphaImage.h; sourceTree = "<group>"; };
-		0B1DA4091E714674002D5642 /* OWTaskTopAlphaImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTaskTopAlphaImage.m; sourceTree = "<group>"; };
-		0B1DA40A1E714674002D5642 /* XYVideoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYVideoModel.h; sourceTree = "<group>"; };
-		0B1DA40B1E714674002D5642 /* XYVideoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYVideoModel.m; sourceTree = "<group>"; };
+		0B41FD9120BFFD46009F462E /* LMIJKVideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMIJKVideoPlayerView.m; sourceTree = "<group>"; };
+		0B41FD9220BFFD46009F462E /* LMIJKVideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMIJKVideoPlayerView.h; sourceTree = "<group>"; };
+		0B41FD9420C12AC5009F462E /* LMIJKVideoPlayerVolumeBrightButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMIJKVideoPlayerVolumeBrightButton.h; sourceTree = "<group>"; };
+		0B41FD9520C12AC5009F462E /* LMIJKVideoPlayerVolumeBrightButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMIJKVideoPlayerVolumeBrightButton.m; sourceTree = "<group>"; };
+		0B41FD9720C12B2A009F462E /* LMIJKVideoPlayerProgressSlider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMIJKVideoPlayerProgressSlider.h; sourceTree = "<group>"; };
+		0B41FD9820C12B2A009F462E /* LMIJKVideoPlayerProgressSlider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMIJKVideoPlayerProgressSlider.m; sourceTree = "<group>"; };
 		0BA9F7CC1E5D868C00E6417E /* LM_IJKMoivePlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LM_IJKMoivePlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA9F7D01E5D868C00E6417E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0BA9F7D21E5D868C00E6417E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -130,6 +123,7 @@
 		0BA9F8461E5D986600E6417E /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 		0BA9F8471E5D986600E6417E /* ViewController+MASAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ViewController+MASAdditions.h"; sourceTree = "<group>"; };
 		0BA9F8481E5D986600E6417E /* ViewController+MASAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ViewController+MASAdditions.m"; sourceTree = "<group>"; };
+		0BD5E5751FBD836C0068E24F /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +133,7 @@
 			files = (
 				0BA9F81D1E5D8FBB00E6417E /* AudioToolbox.framework in Frameworks */,
 				0BA9F81B1E5D8FB300E6417E /* AVFoundation.framework in Frameworks */,
+				0BD5E5761FBD836C0068E24F /* libstdc++.tbd in Frameworks */,
 				0BA9F8191E5D8FA800E6417E /* CoreGraphics.framework in Frameworks */,
 				0BA9F8171E5D8F9400E6417E /* CoreMedia.framework in Frameworks */,
 				0BA9F8151E5D873300E6417E /* CoreVideo.framework in Frameworks */,
@@ -173,18 +168,13 @@
 		0B1DA3FF1E714674002D5642 /* LM_ijkPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				0B1DA4001E714674002D5642 /* coverimg.jpeg */,
-				0B1DA4081E714674002D5642 /* OWTaskTopAlphaImage.h */,
-				0B1DA4091E714674002D5642 /* OWTaskTopAlphaImage.m */,
+				0B41FD9220BFFD46009F462E /* LMIJKVideoPlayerView.h */,
+				0B41FD9120BFFD46009F462E /* LMIJKVideoPlayerView.m */,
+				0B41FD9420C12AC5009F462E /* LMIJKVideoPlayerVolumeBrightButton.h */,
+				0B41FD9520C12AC5009F462E /* LMIJKVideoPlayerVolumeBrightButton.m */,
+				0B41FD9720C12B2A009F462E /* LMIJKVideoPlayerProgressSlider.h */,
+				0B41FD9820C12B2A009F462E /* LMIJKVideoPlayerProgressSlider.m */,
 				0B1DA4031E714674002D5642 /* LRMacroDefinitionHeader.h */,
-				0B1DA4011E714674002D5642 /* LMVideoPlayerView.h */,
-				0B1DA4021E714674002D5642 /* LMVideoPlayerView.m */,
-				0B1DA4041E714674002D5642 /* LZHButton.h */,
-				0B1DA4051E714674002D5642 /* LZHButton.m */,
-				0B1DA4061E714674002D5642 /* LZHProgressSlider.h */,
-				0B1DA4071E714674002D5642 /* LZHProgressSlider.m */,
-				0B1DA40A1E714674002D5642 /* XYVideoModel.h */,
-				0B1DA40B1E714674002D5642 /* XYVideoModel.m */,
 			);
 			path = LM_ijkPlayer;
 			sourceTree = "<group>";
@@ -265,6 +255,7 @@
 		0BA9F8031E5D86CC00E6417E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0BD5E5751FBD836C0068E24F /* libstdc++.tbd */,
 				0BA9F81C1E5D8FBB00E6417E /* AudioToolbox.framework */,
 				0BA9F81A1E5D8FB300E6417E /* AVFoundation.framework */,
 				0BA9F8181E5D8FA800E6417E /* CoreGraphics.framework */,
@@ -424,7 +415,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0BA9F7DF1E5D868C00E6417E /* LaunchScreen.storyboard in Resources */,
-				0B1DA40C1E714674002D5642 /* coverimg.jpeg in Resources */,
 				0BA9F7DC1E5D868C00E6417E /* Assets.xcassets in Resources */,
 				0BA9F7DA1E5D868C00E6417E /* Main.storyboard in Resources */,
 			);
@@ -453,22 +443,20 @@
 			files = (
 				0BA9F84F1E5D986600E6417E /* NSArray+MASAdditions.m in Sources */,
 				0BA9F84E1E5D986600E6417E /* MASViewConstraint.m in Sources */,
-				0B1DA4111E714674002D5642 /* XYVideoModel.m in Sources */,
 				0BA9F84B1E5D986600E6417E /* MASConstraintMaker.m in Sources */,
 				0BA9F8511E5D986600E6417E /* View+MASAdditions.m in Sources */,
-				0B1DA40F1E714674002D5642 /* LZHProgressSlider.m in Sources */,
 				0BA9F84A1E5D986600E6417E /* MASConstraint.m in Sources */,
 				0BA9F7D71E5D868C00E6417E /* ViewController.m in Sources */,
 				0BA9F84D1E5D986600E6417E /* MASViewAttribute.m in Sources */,
+				0B41FD9620C12AC5009F462E /* LMIJKVideoPlayerVolumeBrightButton.m in Sources */,
 				0BA9F8501E5D986600E6417E /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
-				0B1DA4101E714674002D5642 /* OWTaskTopAlphaImage.m in Sources */,
 				0BA9F8491E5D986600E6417E /* MASCompositeConstraint.m in Sources */,
+				0B41FD9320BFFD46009F462E /* LMIJKVideoPlayerView.m in Sources */,
 				0BA9F84C1E5D986600E6417E /* MASLayoutConstraint.m in Sources */,
-				0B1DA40D1E714674002D5642 /* LMVideoPlayerView.m in Sources */,
 				0BA9F7D41E5D868C00E6417E /* AppDelegate.m in Sources */,
+				0B41FD9920C12B2A009F462E /* LMIJKVideoPlayerProgressSlider.m in Sources */,
 				0BA9F7D11E5D868C00E6417E /* main.m in Sources */,
 				0BA9F8521E5D986600E6417E /* ViewController+MASAdditions.m in Sources */,
-				0B1DA40E1E714674002D5642 /* LZHButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -624,7 +612,7 @@
 				);
 				INFOPLIST_FILE = LM_IJKMoivePlayer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Owhat.LM-IJKMoivePlayer";
+				PRODUCT_BUNDLE_IDENTIFIER = cn.leesim.www;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -640,7 +628,7 @@
 				);
 				INFOPLIST_FILE = LM_IJKMoivePlayer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Owhat.LM-IJKMoivePlayer";
+				PRODUCT_BUNDLE_IDENTIFIER = cn.leesim.www;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

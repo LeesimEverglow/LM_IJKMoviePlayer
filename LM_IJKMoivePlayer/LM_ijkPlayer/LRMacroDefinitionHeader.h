@@ -1,3 +1,4 @@
+
 //
 //  LRMacroDefinitionHeader.h
 //  LRMacroDefinition
@@ -31,6 +32,16 @@
 #define SCREEN_SIZE [UIScreen mainScreen].bounds.size
 #endif
 
+//获取statusBarHeight、NavigationBarHeight
+#define StatusBarHeight ([[UIApplication sharedApplication] statusBarFrame].size.height)
+#define NavigationBarHeight 44.0f
+#define StatusBarWithNavigationBarHeight (StatusBarHeight+NavigationBarHeight)
+#define FictitiousHomeButtonHeight 34.0f
+//获取TabBarHeight
+#define TabBarHeight (iPhoneX?83.0f:49.0f)
+//iphone678 默认tabbarheight
+#define OldTabBarHeight 49.0f
+
 
 //2.获取通知中心
 #define LRNotificationCenter [NSNotificationCenter defaultCenter]
@@ -43,6 +54,11 @@
 #define LRRGBAColor(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:a]
 // clear背景颜色
 #define LRClearColor [UIColor clearColor]
+
+
+/// rgb颜色转换（16进制->10进制） 色值转换rgb
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
 
 //5.自定义高效率的 NSLog
 #ifdef DEBUG
@@ -157,11 +173,17 @@ item.alpha = 0.0; \
 // 判断是否为iPhone 6Plus/6sPlus
 #define iPhone6Plus_6sPlus [[UIScreen mainScreen] bounds].size.width == 414.0f && [[UIScreen mainScreen] bounds].size.height == 736.0f
 
+// 判断是否为iPhone X
+#define iPhoneX [[UIScreen mainScreen] bounds].size.width == 375.0f && [[UIScreen mainScreen] bounds].size.height == 812.0f
+
 //获取系统版本
 #define IOS_SYSTEM_VERSION [[[UIDevice currentDevice] systemVersion] floatValue]
 
 //判断 iOS 8 或更高的系统版本
 #define IOS_VERSION_8_OR_LATER (([[[UIDevice currentDevice] systemVersion] floatValue] >=8.0)? (YES):(NO))
+
+//判断 iOS 11 或更高的系统版本
+#define IOS_VERSION_11_OR_LATER (([[[UIDevice currentDevice] systemVersion] floatValue] >=11.0)? (YES):(NO))
 
 //15.判断是真机还是模拟器
 #if TARGET_OS_IPHONE
@@ -195,14 +217,18 @@ item.alpha = 0.0; \
 
 
 /*
----- Owhat_v4 常用的颜色 －－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+ ---- Owhat_v4 常用的颜色 －－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
  */
 
 
 //主色调
-#define Color_Main [UIColor colorWithRed:255.0/255.0 green:104.0/255.0 blue:120.0/255.0 alpha:1]
+#define Color_Main [UIColor colorWithRed:255.0/255.0 green:88.0/255.0 blue:104.0/255.0 alpha:1]
 
+//透明色主色调
+#define Color_Main_Alpha(a) [UIColor colorWithRed:255.0/255.0 green:88.0/255.0 blue:104.0/255.0 alpha:a]
 
+//黄色主色调
+#define Color_Main_Yellow [UIColor colorWithRed:255.0/255.0 green:186.0/255.0 blue:0.0/255.0 alpha:1]
 
 //导航栏主要背景色
 #define Color_NavigationBar_Main [UIColor whiteColor]
@@ -212,7 +238,12 @@ item.alpha = 0.0; \
 
 
 //主要的视图背景颜色[UIColor groupTableViewBackgroundColor]
-#define Color_ContentView_BackgroundColor_Main [UIColor colorWithRed:245.0/255.0 green:245.0/255.0 blue:245.0/255.0 alpha:1]
+#define Color_ContentView_BackgroundColor_Main [UIColor colorWithRed:248.0/255.0 green:248.0/255.0 blue:248.0/255.0 alpha:1]
+
+
+//分割线颜色
+#define Color_SplitLineView [UIColor colorWithRed:230.0/255.0 green:230.0/255.0 blue:230.0/255.0 alpha:1]
+
 
 
 //顶部提醒视图（横幅）背景颜色
@@ -222,10 +253,10 @@ item.alpha = 0.0; \
 
 
 //按钮－可点状态下的 背景颜色
-#define Color_Button_Available [UIColor colorWithRed:255.0/255.0 green:104.0/255.0 blue:120.0/255.0 alpha:1]
+#define Color_Button_Available [UIColor colorWithRed:255.0/255.0 green:88.0/255.0 blue:104.0/255.0 alpha:1]
 
 //按钮－不可点状态下的 背景颜色
-#define Color_Button_Unavailable [UIColor colorWithRed:255.0/255.0 green:104.0/255.0 blue:119.0/255.0 alpha:0.32]
+#define Color_Button_Unavailable [UIColor colorWithRed:255.0/255.0 green:88.0/255.0 blue:104.0/255.0 alpha:0.32]
 
 
 
@@ -310,7 +341,7 @@ item.alpha = 0.0; \
 
 
 /*
----- Owhat_v4 按钮 常用frame设置 －－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+ ---- Owhat_v4 按钮 常用frame设置 －－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
  */
 
 
@@ -385,7 +416,10 @@ item.alpha = 0.0; \
 #define ValidateCode_BusinessType_Resetpwd @"resetpwd"
 //绑定账号 验证码业务类型
 #define ValidateCode_BusinessType_BindAccount @"bindaccount"
-
+//绑定账号 更改手机号,邮箱业务类型
+#define ValidateCode_BusinessType_UpdateAccount @"updateaccount"
+//更新支付密码 验证码业务类型
+#define ValidateCode_BusinessType_UpdatePayPwd @"updatepaypwd"
 
 
 //图片验证码业务类型-登录
@@ -435,18 +469,20 @@ item.alpha = 0.0; \
  */
 #define OWhat_PasswordMaxCount 16
 
+#define OWhat_PayPasswordMaxCount 6
+
 
 
 //xcode 8 真机打印不全
-#ifdef DEBUG
-
-#define NSLog(FORMAT, ...) fprintf(stderr, "%s:%zd\t%s\n", [[[NSString stringWithUTF8String: __FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat: FORMAT, ## __VA_ARGS__] UTF8String]);
-
-#else
-
-#define NSLog(FORMAT, ...) nil
-
-#endif
+//#ifdef DEBUG
+//
+//#define NSLog(FORMAT, ...) fprintf(stderr, "%s:%zd\t%s\n", [[[NSString stringWithUTF8String: __FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat: FORMAT, ## __VA_ARGS__] UTF8String]);
+//
+//#else
+//
+//#define NSLog(FORMAT, ...) nil
+//
+//#endif
 
 
 
